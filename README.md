@@ -9,8 +9,8 @@ UDACITY - DATA SCIENTIST CAPSTONE project
 
 TITLE:
 
-DATA SCIENTIST PROJECT RELATED TO THE ANALYSIS OF HOSPITALIZATION DATA IN
- FRANCE DUE TO COVID-19 - Focus on my Region in Occitanie.
+IMPROVING THE ALLOCATION OF HOSPITALZATION RESOURCES IN HAUTE-GARONNE
+ DURING THE COVID-19 PANDEMIC THROUGH PREDICTIVE MODELS.
 
 
 ============================================================================
@@ -35,12 +35,12 @@ Considering the rebound of COVID-19 cases in France these last weeks,
 
 2 - I will analyze this problem through visualization and data exploration
     to have a better understanding of the process to implement.
-	
+
 3 - I will implement the algorithms and metrics to solve this problem.
 
 4 - I will collect my results and conclude to what extend I solve the
     problem.
-	
+
 5 - I will propose a blog post to document the steps or my work.
 
 
@@ -49,147 +49,207 @@ The Blog Post here-below gathers my work for this purpose.
 
 Problem Statement
 
+
 Description:
 
-Using data from institutional site, I will focus my attention on the
- hospitalization, i.e. how COVID-19 fills our hospitals with new patients
- and the capacity of our hospitals to absorb these new patients.
+Purpose of the project consists in predicting the quantity of means for
+ hospitalization and intensive care such that the appropriate means could
+ be affected to a geographical area.
+It shall be realized sufficiently in advance for logictics concerns and
+ with a high level of accuracy for helping bring the appropiate quantity
+ of health care means.
+By order, I will focus my attention on my department, Haute-Garonne, my
+ region Occitanie and the France.
+
 
 Answering strategy:
-I will monitor the hospitalization in the context of the population and
- the rate of people positive to the COVID-19 and the mortality. I will work
- at the scale of the department and even the region. My attention will be
- particularly focused on my department and my region.
-The problem to solve consists in providing threshold on parameters to
- identify that would indicate when increase of hospitalization would
- significantly increase the risk of going in resuscitation or intensive
- care, or even the risk of death.
 
-In that perspective, I will also try to propose a model for predicting
- the number of hospitalization.
+For addressing this purpose, I need building an accurate predictive model
+ of the number of hospitalization and resuscitation cases per various
+ geograpical areas.
+For that, I need a large amount of data related to COVID-19 pandemy from
+ french hospitals.
+Actually, I would present my strategy as follows:
 
-Metrics
-Description and justification:
-For measuring efficiency of my solution, I propose using the R2 score
- as metrics.
+- Explore input data
+
+- Develop a methodology
+
+- Implement my solution
+
+- Present my results
+
+- Conclude
+
+
+Define my metrics:
+
+My first metrics is based on the predictive model scoring; I will target
+ a score equal or higher than 0.9 on a scale from 0 (null) to 1 (perfect)
+My second metrics is related to my first target (number of hospitalized
+ patient) ... I assume the predictive absolute error shall to exceed 1/5
+ of this capacity, i.e. 23 hospitalized people (never exceeding 118).
+In amount of department, we goes from 23 for the department 31 to 299
+ for the Region Occitanie (76) and 2300 for France.
+My third metrics is related to my second target (number of hospitalized
+ patient) ... I assume the predictive absolute error shall to exceed 1/5
+ of this capacity, i.e. 29 people hospitalized in intensive care (never
+ exceeding 145). In amount of department, we goes from 29 for the
+ department 31 to 377 for the Region Occitanie (76) and 2900 for France.
 
 
 ============================================================================
 
 DATA EXPLORATION
 
-Workspace:
 
-For this project, the initial analysis was realized through a Notebook.
- This Notebook like all related files are available in a dedicated Github
- repository (more information at the bottom of this post). I coded in Python
- 3 mainly using Numpy and Pandas libraries.
+I will gather data related to COVID-19 patients from all french
+ institutional health sites related from all departments of France. Then I
+ will explore and describe these data for identifying potential troubles
+ for processing them.
 
+
+WORKSPACE
+Calculations, plots and analysis of this project were realized through a
+ python Notebook. I coded in Python 3 with basic libraries to get data from
+ my files, to handle and plot these data (numpy, pandas, plotly, matplotly
+ and seaborn) and with sklearn for modeling then train and evaluate my
+ model. I chose sklearn to benefit from the free and the large amount of
+ possible models and related metrics solutions.
+
+This Notebook and all related files are available in a dedicated Github
+ repository. Before running the code:
  
-Input data description:
+- Refer to the README file;
 
-I've gathered several data files reporting various information related to
- the epidemic of COVID-19 in France from the institutional web site:
-https://www.data.gouv.fr/fr/datasets
+- Refer to the Requirements file for knowing the required environment;
+
+- Download the whole content of the dedicated Github repository on your
+   workspace and update the variable ‘work_dir’ accordingly.
+
+
+DESCRIPTIONS OF INPUT DATA SETS
+The 29 December 2022, I downloaded data files related to the COVID-19
+ epidemic in France reported directly by the hospitals and gathered on the
+ french institutional website https://www.data.gouv.fr/fr/datasets
 The source web site indicates that data have been gathered along the time
  from various formats and contents. All the files used are under the License
  "Open Data Commons Open Database License (ODbL)".
 
 
 ============================================================================
+
+DATA VIZUALIZATION
+
+I will plot some data for continuing the exploration and finding additional
+ clues for further preprocessing and modeling:
  
-Data access:
-
-I downloaded the following data files the 29 December 2022. All data are
- stored in Github of this project.
+ - Time-series (all files)
  
-Before running the code:
-
--	Refer to the README file
-
--	Refer to the Requirements file for knowing the required environment
-
--	Download the whole content of the dedicated Github repository on your
-    workspace and update the variable ‘work_dir’ accordingly.
-
-
-============================================================================
-
-Data visualization:
-
-Visualization related to data exploration:
-AT this level, I'd like to merge all dataframes to benefit the maximum data
- to work on later. But is it possible?
-My main concern, since I use data file with time series, is that they all
- covers the common time period long enought to keep a lot of data to work
- on.
-Let's have a view on the time series on every input file.
-Once we would have identified the input data files that I can keep or no,
- I will merge them by the columns 'date' and 'dep'.
+ - Data availability and overlapping (Files #3 & #4)
+ 
+ - Distribution of data per region & department  (Files #3 & #4)
 
 
 ============================================================================
 
 METHODOLOGY
 
-
-Data Preprocessing:
-
-- Data merging
-
-- Description of data (after merging)
-
-- Data cleaning
-
-- Data complementation
-
-- Implementation
-
-- Modeling
+It consists in preparing and selecting the most appropriate data sets
+ for modeling with accuracy with respect to my targets.
 
 
+Data preprocessing:
+
+It consists here in all required data preprocessing operations for
+ selecting data files, merging and cleaning my data and provide them in
+ a understandable way:
+ 
+ - data merging;
+ 
+ - removing missing values;
+ 
+ - adjust the data set to kept data under format that can be used for
+    further modeling activities;
+	
+ - Data set's labels renaming for consistency between data files;
+ 
+ - Convert time series in a consistent format for modeling;
+ 
+ - label description by providing if necessary a literal description of
+   labels for further presentation concerns.
+
+
+Data understanding:
+
+It consists in deepening my understanding of the data sets to identify
+ relevant data to properly feed my model with respect to my targets:
+ 
+ - a full description of the input parameters;
+ 
+ - a view of the distribution of the targets per geographical area;
+ 
+ - a view on the correlation between targets;
+ 
+ - a view on the correlation between input parameters and targets;
+ 
+ - make assumptions to reduce the number of input parameters.
+
+
+Data extraction:
+
+It consists in removing useless input parameters identified during the data
+ understanding step and keeping only appropriate data for modeling.
+Note: This selection will be done in two steps; first here, second during
+      the Refinement phase.
+
+============================================================================
+
+IMPLEMENTATION
+
+This step will consists in building a model according to my targets:
+
+- Multiple targets problem: discuss the purpose to run after two
+   targets;
    
-============================================================================
+- Model selection: I will identify the most appropriate modeling method;
 
-FINDINGS
+- Model metrics selection: I will identify the most appropriate scoring
+   method in accordance with the model selection;
+   
+- Refinement: I may have to adjust the data sets;
 
+- Hyperparameter tuning: I will set the model for improving its result;
 
-Among complication met during this analysis, I would report:
+- Vizualization: I will illustrate result of the model implementation.
 
--	Some data were not correctly defined;
-
--	All data sets do no provide updated values at the same frequency such
-    it make difficult the merge and the analysis of these data.
--	The difficulties to find a relevant type of model for this kind of
-    complex phenomenon.
--	The difficulties to find a relevant metrics since it requires a long
-    period of test before knowing the consistency of such model and such
-	metrics with this model for this type of dataset.
- 
 
 ============================================================================
  
-RESULT
+RESULTS
 
-- Visualization
+Presentation of my results will consists in:
 
-- Model evaluation and validation
- 
+- Model evluation and validation;
+
+- Justification, including comparison tables and explanations.
+
 
 ============================================================================
 
 CONCLUSION
 
-- Reflection
-
-- Improvement
+- Reflection: Summarize the end-to-end problem solution and discuss what
+   was interesting/difficult in the solution implementation;
+   
+- Improvement: Open items that could by studied to improvement the result.
 
  
 ============================================================================
 
 VERSION:
 
-ID: 1.3.0
+ID: 1.4.0
 
 In comparison with previous version, this new version brings following
  change:
